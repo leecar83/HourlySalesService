@@ -93,6 +93,6 @@ BEGIN
 	    INSERT INTO [LeeMiller].[HourlyTotals] ([RestNumber],[BusinessHour],[Sales],[DestCode],[PayType])
 		VALUES (@RestNum, @BusinessHour, @Sales, @DestCode, @PayType)
 	END
-	select @id = SCOPE_IDENTITY()
+	select @id = SCOPE_IDENTITY();
 END
 GO
