@@ -1,0 +1,96 @@
+---Sample SQL DB setup script for Transactions DB using my own schema
+
+USE [Transactions]
+GO
+/****** Object:  Schema [LeeMiller]    Script Date: 12/21/2017 7:56:27 PM ******/
+CREATE SCHEMA [LeeMiller]
+GO
+/****** Object:  Table [LeeMiller].[HourlyTotals]    Script Date: 12/21/2017 7:56:27 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [LeeMiller].[HourlyTotals](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[RestNumber] [int] NOT NULL,
+	[BusinessHour] [datetime] NOT NULL,
+	[Sales] [money] NULL,
+	[DestCode] [varchar](1) NULL,
+	[PayType] [varchar](1) NULL,
+ CONSTRAINT [PK_HourlyTotals_1] PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [LeeMiller].[OrderType]    Script Date: 12/21/2017 7:56:27 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [LeeMiller].[OrderType](
+	[DestCode] [varchar](1) NOT NULL,
+	[Description] [varchar](50) NULL,
+ CONSTRAINT [PK_OrderType] PRIMARY KEY CLUSTERED 
+(
+	[DestCode] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [LeeMiller].[PayType]    Script Date: 12/21/2017 7:56:27 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [LeeMiller].[PayType](
+	[PayCode] [varchar](1) NOT NULL,
+	[Description] [varchar](50) NULL,
+ CONSTRAINT [PK_PayType] PRIMARY KEY CLUSTERED 
+(
+	[PayCode] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [LeeMiller].[HourlyTotals]  WITH CHECK ADD  CONSTRAINT [FK_HourlyTotals_OrderType] FOREIGN KEY([DestCode])
+REFERENCES [LeeMiller].[OrderType] ([DestCode])
+GO
+ALTER TABLE [LeeMiller].[HourlyTotals] CHECK CONSTRAINT [FK_HourlyTotals_OrderType]
+GO
+ALTER TABLE [LeeMiller].[HourlyTotals]  WITH CHECK ADD  CONSTRAINT [FK_HourlyTotals_PayType] FOREIGN KEY([PayType])
+REFERENCES [LeeMiller].[PayType] ([PayCode])
+GO
+ALTER TABLE [LeeMiller].[HourlyTotals] CHECK CONSTRAINT [FK_HourlyTotals_PayType]
+GO
+/****** Object:  StoredProcedure [LeeMiller].[spInsertOrUpdate]    Script Date: 12/21/2017 7:56:27 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Author, Lee Miller>
+-- Create date: <Create Date, 12/16/2017,>
+-- Description:	<Description, Inserts or Updates Hourly Sales,>
+-- =============================================
+CREATE PROCEDURE [LeeMiller].[spInsertOrUpdate] 
+	-- Add the parameters for the stored procedure here
+	@RestNum int,  
+	@BusinessHour datetime, 
+	@Sales money,
+	@DestCode varchar(1),
+	@PayType varchar(1) 
+AS
+BEGIN
+	SET NOCOUNT ON;
+	IF Exists (Select * from [LeeMiller].[HourlyTotals] where [RestNumber] = @RestNum and [BusinessHour] = @BusinessHour
+		and [DestCode] = @DestCode and [PayType] = @PayType)
+	BEGIN
+		UPDATE [LeeMiller].[HourlyTotals] set [Sales] = @Sales
+		where [RestNumber] = @RestNum and [BusinessHour] = @BusinessHour and [DestCode] = @DestCode and [PayType] = @PayType
+	END
+	ELSE
+	BEGIN
+	    INSERT INTO [LeeMiller].[HourlyTotals] ([RestNumber],[BusinessHour],[Sales],[DestCode],[PayType])
+		VALUES (@RestNum, @BusinessHour, @Sales, @DestCode, @PayType)
+	END
+END
+GO
