@@ -1,3 +1,3 @@
 ﻿{
-  "TransactionsConnectionString": "Data Source=MILLERL-CL;Initial Catalog=Transactions;Integrated Security=True"
+  "TransactionsConnectionString": "Data Source=localhost;Initial Catalog=Transactions;Integrated Security=True"
 }
