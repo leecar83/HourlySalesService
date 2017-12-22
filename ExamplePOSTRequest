@@ -1,0 +1,43 @@
+{
+	"RestNumber": 9000,
+	"BusinessHour": [1965,1,1,3],
+	"Channels": [
+                {
+                   "DestCode" : "I",
+		           "PayTypes" : [
+                         {
+                         "PayType" : "U",
+                         "Sales" : "34.50"
+                         }, 
+						 {
+                         "PayType" : "1",
+                         "Sales" : "100.00"
+						 },
+						 	 {
+                         "PayType" : "C",
+                         "Sales" : "50.00"
+						 },
+						 
+                    ]
+                },
+				      {
+                   "DestCode" : "Y",
+		           "PayTypes" : [
+                         {
+                         "PayType" : "U",
+                         "Sales" : "34.50"
+                         }, 
+						 {
+                         "PayType" : "1",
+                         "Sales" : "100.00"
+						 },
+						 	 {
+                         "PayType" : "C",
+                         "Sales" : "60.00"
+						 },
+						 
+                    ]
+                }
+               
+	]					
+}
