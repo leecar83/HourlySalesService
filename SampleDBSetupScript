@@ -77,7 +77,8 @@ CREATE PROCEDURE [LeeMiller].[spInsertOrUpdate]
 	@BusinessHour datetime, 
 	@Sales money,
 	@DestCode varchar(1),
-	@PayType varchar(1) 
+	@PayType varchar(1),
+	@id int = 0 output
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -92,5 +93,6 @@ BEGIN
 	    INSERT INTO [LeeMiller].[HourlyTotals] ([RestNumber],[BusinessHour],[Sales],[DestCode],[PayType])
 		VALUES (@RestNum, @BusinessHour, @Sales, @DestCode, @PayType)
 	END
+	select @id = SCOPE_IDENTITY()
 END
 GO
