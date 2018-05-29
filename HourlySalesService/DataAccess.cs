@@ -40,10 +40,12 @@ namespace HourlySalesService
             paramaters.Add("@Sales", record.Sales);
             paramaters.Add("@DestCode", record.DestCode);
             paramaters.Add("@PayType", record.PayType);
+            paramaters.Add("@id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
 
             using (IDbConnection db = new SqlConnection(strConnectionString))
             {
                 db.Execute("LeeMiller.spInsertOrUpdate", paramaters, commandType: CommandType.StoredProcedure);
+                int iIDReturned = paramaters.Get<int>("id");
             }
         }
 
